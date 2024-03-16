@@ -1,8 +1,6 @@
 const { initializeApp } = require("firebase-admin/app");
 const { credential, messaging } = require("firebase-admin");
-const Parser = require('rss-parser');
 const path = require('path');
-const parser = new Parser();
 
 const serviceAccount = require(path.join(__dirname, 'secret.json'));
 
@@ -10,14 +8,14 @@ const INFM_TOPIC = "INFM"
 const INFB_TOPIC = "INFB"
 const MINB_TOPIC = "MINB"
 const MKIB_TOPIC = "MKIB"
-const rssFeedUrl = 'https://intranet.hka-iwi.de/iwii/REST/rssfeed/newsbulletinboard/';
+const REST_URL = 'https://intranet.hka-iwi.de/iwii/REST/newsbulletinboard/';
 
 // Urls
 const rssFeedUrls = {
-    [INFM_TOPIC]: rssFeedUrl + INFM_TOPIC,
-    [INFB_TOPIC]: rssFeedUrl + INFB_TOPIC,
-    [MINB_TOPIC]: rssFeedUrl + MINB_TOPIC,
-    [MKIB_TOPIC]: rssFeedUrl + MKIB_TOPIC
+    [INFM_TOPIC]: REST_URL + INFM_TOPIC,
+    [INFB_TOPIC]: REST_URL + INFB_TOPIC,
+    [MINB_TOPIC]: REST_URL + MINB_TOPIC,
+    [MKIB_TOPIC]: REST_URL + MKIB_TOPIC
 };
 
 // Keep track of processed item IDs for each topic
@@ -51,10 +49,11 @@ async function sendMessageToFCM(title, description, topic) {
 // Function to fetch and parse RSS feed
 async function fetchAndParseRSSFeed(feedUrl, topic) {
     try {
-        console.info("Fetching RSS Feed: " + feedUrl);
-        const feed = await parser.parseURL(feedUrl);
-        if (feed && feed.items && feed.items.length > 0) {
-            for (const item of feed.items) {
+        console.info("GET " + feedUrl);
+        const response = await fetch(feedUrl);
+        const feed = await response.json()
+        if (feed && feed.length > 0) {
+            for (const item of feed) {
                 if (!processedItemIds[topic].includes(item.id)) {
                     await sendMessageToFCM(item.title, item.description, topic);
                     processedItemIds[topic].push(item.id);
@@ -72,10 +71,11 @@ async function fetchAll() {
     for (const topic in rssFeedUrls) {
         const feedUrl = rssFeedUrls[topic]
         try {
-            console.info("Fetching RSS Feed: " + feedUrl);
-            const feed = await parser.parseURL(feedUrl);
-            if (feed && feed.items && feed.items.length > 0) {
-                for (const item of feed.items) {
+            console.info("GET " + feedUrl);
+            const response = await fetch(feedUrl);
+            const feed = await response.json()
+            if (feed && feed.length > 0) {
+                for (const item of feed) {
                     processedItemIds[topic].push(item.id);
                 }
             } else {
