@@ -7,9 +7,10 @@
 
 ## Usage
 
-1. Insert `secret.json` from your firebase messaging account into the directory root
-2. Run docker compose: `docker compose up`
+1. Create authentication secret in your firebase console under *Settings -> Service Accounts*. See [here](https://firebase.google.com/docs/cloud-messaging/auth-server) for more infos.
+2. Insert the downloaded json file as `secret.json` into the directory root
+3. Run docker compose: `docker compose up`
 
 ## Configuration
 
-Edit the update interval by editing the [docker-compose.yml](./docker-compose.yml) file
+Edit the *update interval* by editing the [docker-compose.yml](./docker-compose.yml) file
