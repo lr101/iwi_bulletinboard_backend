@@ -8,14 +8,15 @@ const INFM_TOPIC = "INFM"
 const INFB_TOPIC = "INFB"
 const MINB_TOPIC = "MINB"
 const MKIB_TOPIC = "MKIB"
+const QUERY = "?contentFormat=text/plain"
 const REST_URL = 'https://raumzeit.hka-iwi.de/api/v1/newsbulletinboard/public/courseofstudy/';
 
 // Urls
 const rssFeedUrls = {
-    [INFM_TOPIC]: REST_URL + INFM_TOPIC,
-    [INFB_TOPIC]: REST_URL + INFB_TOPIC,
-    [MINB_TOPIC]: REST_URL + MINB_TOPIC,
-    [MKIB_TOPIC]: REST_URL + MKIB_TOPIC
+    [INFM_TOPIC]: REST_URL + INFM_TOPIC + QUERY,
+    [INFB_TOPIC]: REST_URL + INFB_TOPIC + QUERY,
+    [MINB_TOPIC]: REST_URL + MINB_TOPIC + QUERY,
+    [MKIB_TOPIC]: REST_URL + MKIB_TOPIC + QUERY
 };
 
 // Keep track of processed item IDs for each topic
