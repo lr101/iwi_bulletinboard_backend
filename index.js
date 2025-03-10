@@ -8,7 +8,7 @@ const INFM_TOPIC = "INFM"
 const INFB_TOPIC = "INFB"
 const MINB_TOPIC = "MINB"
 const MKIB_TOPIC = "MKIB"
-const REST_URL = 'https://intranet.hka-iwi.de/iwii/REST/newsbulletinboard/';
+const REST_URL = 'https://raumzeit.hka-iwi.de/api/v1/newsbulletinboard/public/courseofstudy/';
 
 // Urls
 const rssFeedUrls = {
@@ -27,11 +27,11 @@ let processedItemIds = {
 };
 
 // Function to send message to FCM
-async function sendMessageToFCM(title, description, topic) {
+async function sendMessageToFCM(title, content, topic) {
     const message = {
         notification: {
             title: title,
-            body: description
+            body: content
         },
         topic: topic
     };
@@ -55,7 +55,7 @@ async function fetchAndParseRSSFeed(feedUrl, topic) {
         if (feed && feed.length > 0) {
             for (const item of feed) {
                 if (!processedItemIds[topic].includes(item.id)) {
-                    await sendMessageToFCM(item.title, item.description, topic);
+                    await sendMessageToFCM(item.title, item.content, topic);
                     processedItemIds[topic].push(item.id);
                 }
             }
